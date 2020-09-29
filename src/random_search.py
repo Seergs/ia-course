@@ -10,8 +10,8 @@ import time
 def f(x, y):
     return (x - 2) ** 2 + (y - 2) ** 2
 
-def f2(x,y):
-    return x * (np.e** (-x**2-y**2))
+def f2(x1,x2):
+    return x1 * (np.e** (-x1**2-x2**2))
 
 class RandomSearch:
     def __init__(self, f, xl=-10, xu=10, yl=-10, yu=10):
@@ -99,5 +99,5 @@ class RandomSearch:
         plt.plot(x, y, marker)
 
 
-random_search = RandomSearch(f, xl=-5, xu=5, yl=-5, yu=5)
-random_search.search()
+random_search = RandomSearch(f2, xl=1, xu=2, yl=1, yu=2)
+random_search.search_lite()
