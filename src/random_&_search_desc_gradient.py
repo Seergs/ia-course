@@ -324,7 +324,7 @@ class RandomSearch:
             print("Ploteando {}, {}".format(self.x, self.y))
 
         print(
-            "Mínimo global en x={}, y={}, f(x)={}".format(
+            "\n\nMínimo global en x={}, y={}, f(x)={}\n".format(
                 round(self.x_best, 2), round(self.y_best, 2), round(self.f_best, 2)
             )
         )
@@ -369,7 +369,7 @@ class RandomSearch:
                 self.y_best = self.y
 
         print(
-            "Mínimo global en x={}, y={}, f(x)={}".format(
+            "\n\nMínimo global en x={}, y={}, f(x)={}\n".format(
                 round(self.x_best, 2), round(self.y_best, 2), round(self.f_best, 2)
             )
         )
@@ -733,7 +733,7 @@ class DescGradient:
             self.__plot_contour()
 
         print(
-            "Mínimo global en x={}, y={}, f(x)={}".format(
+            "\n\nMínimo global en x={}, y={}, f(x)={}\n\n".format(
                 round(self.xi, 2), round(self.yi, 2), round(self.f(self.xi, self.yi), 2)
             )
         )
@@ -782,7 +782,7 @@ class DescGradient:
             self.yi = y_next
 
         print(
-            "Mínimo global en x={}, y={}, f(x)={}".format(
+            "\n\nMínimo global en x={}, y={}, f(x)={}\n\n".format(
                 round(self.xi, 2), round(self.yi, 2), round(self.f(self.xi, self.yi), 2)
             )
         )
@@ -791,26 +791,25 @@ class DescGradient:
 # --------Busqueda aleatoria-------
 
 # Primera funcion
-# random_search = RandomSearch(f1, xl=-2, xu=2, yl=-2, yu=2)
-# random_search.search_lite()
-# random_search.plot_surface()
+#random_search = RandomSearch(f1, xl=-2, xu=2, yl=-2, yu=2)
+#random_search.search_lite()
+#random_search.plot_surface()
 
 # Segunda funcion
-# random_search = RandomSearch(f2, xl=1, xu=2, yl=1, yu=2)
-# random_search.search_lite()
+#random_search = RandomSearch(f2, xl=1, xu=2, yl=1, yu=2)
+#random_search.search_lite()
 # random_search.plot_surface()
 
 
 # -------Gradiente---------
 
-
 # Primera funcion
-#gradient = DescGradient(f1, xl=-2, xu=2, yl=-2, yu=2)
-#gradient.search(-0.5,0, get_gradient_f1_x, get_gradient_f1_y)
-#gradient.plot_surface()
+# gradient = DescGradient(f1, xl=-2, xu=2, yl=-2, yu=2)
+# gradient.search_lite(-0.5,0, get_gradient_f1_x, get_gradient_f1_y)
+# gradient.plot_surface()
 
 
 # Segunda funcion
 # gradient = DescGradient(f2, xl=1, xu=2, yl=1, yu=2 )
-# gradient.search(1.8,1.8,get_gradient_f2_x, get_gradient_f2_y)
+# gradient.search_lite(1.8,1.8,get_gradient_f2_x, get_gradient_f2_y)
 # gradient.plot_surface()
