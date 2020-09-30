@@ -230,7 +230,7 @@ class RandomSearch:
     def __init__(self, f, xl, xu, yl, yu):
         """
         Inicializa la clase con el rango de valores, la función objetivo 
-        y la matriz a graficar
+        y los vectores a graficar
 
         Parameters:
             f (function): Función que retorna el valor al evaluar la función objetivo en un punto
@@ -475,59 +475,261 @@ class RandomSearch:
         plt.plot(x, y, marker)
 
 
+
+
+
+
+
+# Clase para el método de Gradiente Descendente
 class DescGradient:
+    """
+    Clase que ejecuta el método de Gradiente descendente
+    para calcular el mínimo global de una función
+
+
+
+    Attributes
+    ----------
+    f: function
+        Función objetivo, de la cual se calculará el mínimo global
+    xl: Numeric
+        Límite inferior en "x"
+    xu: Numeric
+        Límite superior en "x"
+    yl: Numeric
+        Límite inferior en "y"
+    yu: Numeric
+        Límite superior en "y"
+    h: Numeric
+        Factor de cambio para el gradiente
+    x0: Numeric
+        Valor inicial en "x" donde es posible encontrar el mínimo global. 
+        Se obtiene viendo la gráfica de la función objetivo
+    y0: Numeric
+        Valor inicial en "y" donde es posible encontrar el mínimo global. 
+        Se obtiene viendo la gráfica de la función objetivo
+    xi: Numeric
+        Valor en "x" actual donde se interpoló que podría esta el mínimo global.
+        Irá cambiando en cada iteración y este será finalmente el valor en "x" del mínimo global
+    yi: Numeric
+        Valor en "y" actual donde se interpoló que podría esta el mínimo global.
+        Irá cambiando en cada iteración y este será finalmente el valor en "y" del mínimo global
+    x_range: ndarray (numpy)
+        Rango de valores entre el límite inferior y superior en "x", usado para graficar
+    y_range: ndarray (numpy)
+        Rango de valores entre el límite inferior y superior en "y", usado para graficar
+    X: array (numpy)
+        Lista de una dimensión que representa las coordenadas de una matriz, para el vector "x"
+    Y: array (numpy)
+        Lista de una dimensión que representa las coordenadas de una matriz, para el vector "y"
+    Z: array
+        Lista de los valores de la función objetivos evaluada en X,Y
+
+    
+    Methods
+    -------
+    plot_surface():
+        Grafica la superficie en 3D de la función objetivo en el rango especificado
+    __plot_contour():
+        Grafica el contour de la función objetivo en el rango especificado
+    __plot_point(x, y, marker):
+        Plotea un punto en (x,y) con el color de marcador especificado
+    search():
+        Realiza el método de Gradiente descendente para calcular el mínimo global de la función objetivo.
+        Además va graficando los valores encontrados y aproximaciones
+    search_lite():
+        Realiza el método de Gradiente descendente para calcular el mínimo global de la función objetivo.
+    """
+
+
+
+
+    # Método ejecutado al instanciar la clase, recibe la función objetivo y 
+    # el rango de valores en el cual se buscará el mínimo global
     def __init__(self, f, xl=-10, xu=10, yl=-10, yu=10):
+        """
+        Inicializa la clase con el rango de valores, la función objetivo 
+        y los vectores a graficar
+
+        Parameters:
+            f (function): Función que retorna el valor al evaluar la función objetivo en un punto
+            xl (Numeric): Límite inferior en "x"
+            xu (Numeric): Límite superior en "x"
+            yl (Numeric): Límite inferior en "y"
+            yu (Numeric): Límite superior en "y"
+
+        Returns:
+            None
+        """
+
+
         self.f = f
         self.xl = xl
         self.xu = xu
         self.yl = yl
         self.yu = yu
 
+        # El factor de cambio para el gradiente. Se usa un valor pequeño
         self.h = 0.1
 
+
+        # Rango de valores entre el límite inferior y superior con una separación de 0.1
+        # Se crea un rango tanto para "x" como para "y"
         self.x_range = np.arange(xl, xu, 0.1)
         self.y_range = np.arange(xl, xu, 0.1)
+
+        # Nuestros vectores "x" y "y"        
         self.X, self.Y = np.meshgrid(self.x_range, self.y_range)
+
+        # Calculamos nuestro vector "z" evaluando en la función objetivo "x" y "y"
         self.Z = self.f(self.X, self.Y)
 
+
+
+    # Función para graficar la superficie en 3D de la función objetivo en el rango especificado
     def plot_surface(self):
+        """
+        Grafica la superficie en 3D de la función ebjetivo en el rango especificado
+
+        Parameters:
+            None
+
+        Returns:
+            None
+        """
+
+        # Se crea una ventana nueva para graficar.
+        # Esto porque el contour puede ya estar en pantalla
         plt.figure()
+
+        # Le decimos a la libreria de graficas que queremos la proyección en 3D
         ax = plt.axes(projection="3d")
+
+        # Graficamos
         ax.plot_surface(self.X, self.Y, self.Z)
+
+        # Se ponen títulos a los ejes
         ax.set_xlabel("x")
         ax.set_ylabel("y")
         ax.set_zlabel("z")
+
+        # Mostramos la gráfica
         plt.show()
 
+
+    
+
+    # - Función que grafica el contour de la función objetivo en el rango especificado,
+    #   el punto inicial y actual obtenido en search() 
+    # - Esta función será llamada iterativamente
     def __plot_contour(self):
+        """
+        Grafica la funcion objetivo en el rango especificado, el punto incial y el "mejor"
+        -------
+        Private
+        -------
+
+        Parameters:
+            None
+        
+        Returns:    
+            None
+        """
+
+        # Limpiamos el previo marcador que se había ploteado en la iteración anterior
         plt.clf()
+
+        # Graficamos nuestro contour con los vectores "x", "y" y "z"
         plt.contour(self.X, self.Y, self.Z)
 
+        # Ploteamos los puntos (x0,y0) o inicial y (xi, yi) o mejor valor encontrado
+        # Nota:
+        #   -> "bo" es para el punto inicial
+        #   -> "go" es para el mejor punto encontrado
         self.__plot_point(self.x0, self.y0, "bo")
         self.__plot_point(self.xi, self.yi, "go")
+
+        # Realizamos una pausa para que se vea el progreso del "mejor" punto (xi, yi)
         plt.pause(0.005)
 
+
+
+    # Función que grafica un punto en la grafica 2D o contour, se llamará iterativamente    
     def __plot_point(self, x, y, marker):
+        """
+        Plotea un punto en la grafica 2D (contour)
+        -------
+        Private
+        -------
+
+        Parameters:
+            x (Numeric): Posición en "x"
+            y (Numeric): Posición en "y"
+            marker (string) ['go'| "bo]: El tipo de marcador a plotear. Azul o verde 
+
+        Returns: 
+            None
+        """
+
+        # - El marcador verde es para el mejor punto encontrado por lo que se le agrega un label con el valor en "y"
+        # - Como el marcador azul siempre será el mismo se coloca de color azul
         if marker == "go":
             label = "{:.2f}".format(y)
+
+            # Anotamos el valor en "y" en la gráfica
             plt.annotate(
                 label, (x, y), textcoords="offset points", xytext=(0, 10), ha="center"
             )
+
+        # Ploteamos el punto
         plt.plot(x, y, marker)
 
+
+
+    # Función que realiza el método de Grtadiente Descendente para encontrar el mínimo global en
+    # la función objetivo, además de ir graficando tanto el punto inicial como el
+    # mejor punto encontrado hasta el momento
     def search(self, x0, y0, grad_func_x, grad_func_y):
+        """
+        Se realiza la búsqueda del mínimo global mediante Gradiente Descendente 
+        y se van graficando los resultados 
+
+        Parameters:
+            x0 (Numeric): Valor incial en "x" donde es posible que se encuentre el mínimo global
+            y0 (Numeric): Valor inicial en "y" donde es posible que se encuntre el mínimo global
+            grad_func_x (Function): Función que calcula el gradiente para "xi". Es la derivada parcial
+                de la función objetivo con respecto a "x"
+            grad_func_y (Function): Función que calcula el gradiente para "yi". Es la derivada parcial
+                de la función objetivo con respecto a "y"
+        
+        Returns: 
+            None
+        """
         self.x0 = x0
         self.y0 = y0
         self.xi = self.x0
         self.yi = self.y0
+
+        # - Se itera calculando un mejor valor en cada iteración en base al anterior. 
+        # - Entre más iteraciones se hagan más probable es encontrar un resultado más cercano al mínimo global.
+        # - Se coloca un número pequeño de iteraciones porque al graficar y poder ver 
+        #   el punto más acercado al resultado se necesitan realizar pequeñas pausas.
         for i in range(100):
-            self.x_next = self.xi - self.h * grad_func_x(self.xi, self.yi)
-            self.y_next = self.yi - self.h * grad_func_y(self.xi, self.yi)
-            self.xi = self.x_next
-            self.yi = self.y_next
+
+            # - Se calcula un (x,y) en base al anterior (xi,yi). 
+            # - Este servirá para la siguiente iteración
+            # - Aquí se manda llamar a la función de cálculo de gradiente
+            x_next = self.xi - self.h * grad_func_x(self.xi, self.yi)
+            y_next = self.yi - self.h * grad_func_y(self.xi, self.yi)
+
+            # Se actualiza el valor actual como el calculado
+            self.xi = x_next
+            self.yi = y_next
 
             print("Ploteando {},{}".format(self.xi, self.yi))
 
+            # Graficamos el contour de la función. Dentro de esta se grafica también el valor
+            # incial y el mejor valor hasta el momento
             self.__plot_contour()
 
         print(
@@ -536,16 +738,48 @@ class DescGradient:
             )
         )
 
+
+
+
+    # Esta función realiza lo mismo que search(), exceptuando que en esta no se grafica, solo se obtiene
+    # el valor del mínimo global. Por esto se puede colocar muchas más iteraciones
     def search_lite(self, x0, y0, grad_func_x, grad_func_y):
+        """
+        Se realiza la búsqueda del mínimo global mediante Gradiente Descendente 
+
+        Parameters:
+            x0 (Numeric): Valor incial en "x" donde es posible que se encuentre el mínimo global
+            y0 (Numeric): Valor inicial en "y" donde es posible que se encuntre el mínimo global
+            grad_func_x (Function): Función que calcula el gradiente para "xi". Es la derivada parcial
+                de la función objetivo con respecto a "x"
+            grad_func_y (Function): Función que calcula el gradiente para "yi". Es la derivada parcial
+                de la función objetivo con respecto a "y"
+        
+        Returns: 
+            None
+        """
+
+
         self.x0 = x0
         self.y0 = y0
         self.xi = self.x0
         self.yi = self.y0
+
+        # - Se itera calculando un mejor valor en cada iteración en base al anterior. 
+        # - Entre más iteraciones se hagan más probable es encontrar un resultado más cercano al mínimo global.
+        # - Se coloca un número pequeño de iteraciones porque al graficar y poder ver 
+        #   el punto más acercado al resultado se necesitan realizar pequeñas pausas.
         for i in range(10000):
-            self.x_next = self.xi - self.h * grad_func_x(self.xi, self.yi)
-            self.y_next = self.yi - self.h * grad_func_y(self.xi, self.yi)
-            self.xi = self.x_next
-            self.yi = self.y_next
+
+            # - Se calcula un (x,y) en base al anterior (xi,yi). 
+            # - Este servirá para la siguiente iteración
+            # - Aquí se manda llamar a la función de cálculo de gradiente
+            x_next = self.xi - self.h * grad_func_x(self.xi, self.yi)
+            y_next = self.yi - self.h * grad_func_y(self.xi, self.yi)
+
+            # Se actualiza el valor actual como el calculado
+            self.xi = x_next
+            self.yi = y_next
 
         print(
             "Mínimo global en x={}, y={}, f(x)={}".format(
@@ -571,9 +805,9 @@ class DescGradient:
 
 
 # Primera funcion
-# gradient = DescGradient(f1, xl=-2, xu=2, yl=-2, yu=2)
-# gradient.search(-0.5,0, get_gradient_f1_x, get_gradient_f1_y)
-# gradient.plot_surface()
+#gradient = DescGradient(f1, xl=-2, xu=2, yl=-2, yu=2)
+#gradient.search(-0.5,0, get_gradient_f1_x, get_gradient_f1_y)
+#gradient.plot_surface()
 
 
 # Segunda funcion
