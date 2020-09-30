@@ -1,3 +1,18 @@
+# 
+# Sergio Suárez Álvarez
+# 217758497
+# Seminario de solución de inteligencia Artificial I
+#
+#
+# Este programa calcula el mínimo global de una función usando los métodos de 
+# Búsqueda Aleatoria y Gradiente descendiente
+# Para más información sobre el método de Gradiente descendente visite
+# https://www.iartificial.net/gradiente-descendiente-para-aprendizaje-automatico/#:~:text=funci%C3%B3n%20de%20coste.-,M%C3%A9todo%20del%20Gradiente%20Descendiente,%2C%20el%20deep%20learning%2C%20etc.
+#
+#
+#
+
+
 """
 
 Encuentra el mínimo global de una función
@@ -14,12 +29,6 @@ Variables
 
 
 """
-
-# Este programa calcula el mínimo global de una función usando los métodos de 
-# Búsqueda Aleatoria y Gradiente descendiente
-# Para más información sobre el método de Gradiente descendente visite
-# https://www.iartificial.net/gradiente-descendiente-para-aprendizaje-automatico/#:~:text=funci%C3%B3n%20de%20coste.-,M%C3%A9todo%20del%20Gradiente%20Descendiente,%2C%20el%20deep%20learning%2C%20etc.
-
 
 
 import matplotlib.pyplot as plt
@@ -215,34 +224,101 @@ class RandomSearch:
     __plot_point(x,y,marker):
         Grafica un punto en el contour
     """
-    def __init__(self, f, xl=-10, xu=10, yl=-10, yu=10):
+
+    # Método ejecutado al instanciar la clase, recibe la función objetivo y 
+    # el rango de valores en el cual se buscará el mínimo global
+    def __init__(self, f, xl, xu, yl, yu):
+        """
+        Inicializa la clase con el rango de valores, la función objetivo 
+        y la matriz a graficar
+
+        Parameters:
+            f (function): Función que retorna el valor al evaluar la función objetivo en un punto
+            xl (Numeric): Límite inferior en "x"
+            xu (Numeric): Límite superior en "x"
+            yl (Numeric): Límite inferior en "y"
+            yu (Numeric): Límite superior en "y"
+
+        Returns:
+            None
+        """
+
         self.f = f
+
+        # Inicializamos el vector (x,y) en (0,0)
         self.x = 0
         self.y = 0
+
+
+        # Igualmente igualamos el vector (x_best, y_best) en (0,0)
+        # Nota: Este será finalmente la coordenada en (x,y) del 
+        # mínimo global de la función y al evaluarla en estos puntos 
+        # obtendremos nuestra f_best
         self.x_best = 0
         self.y_best = 0
+
+        # Será finalmente el valor de la función objetivo evaluada 
+        # en el punto (x,y) = (x_best, y_best).
+        # Se incializa en infinito (np.inf) para que cualquier valor
+        # que sea el incial se menor que este, así se irá ajustando
         self.f_best = np.inf
+
         self.xl = xl
         self.xu = xu
         self.yl = yl
         self.yu = yu
 
+        # Rango de valores entre el límite inferior y superior con una separación de 0.1
+        # Se crea un rango tanto para "x" como para "y"
         self.x_range = np.arange(xl, xu, 0.1)
         self.y_range = np.arange(xl, xu, 0.1)
+
+        # Nuestros vectores "x" y "y"
         self.X, self.Y = np.meshgrid(self.x_range, self.y_range)
+
+        # Calculamos nuestro vector "z" evaluando en la función objetivo "x" y "y"
         self.Z = self.f(self.X, self.Y)
 
+
+    # Función que realiza la Búsqueda Aleatoria para encontrar el mínimo global en
+    # la función objetivo, además de ir graficando tanto el punto aleatorio como el
+    # mejor punto encontrado hasta el momento
     def search(self):
+        """
+        Se realiza la búsqueda del mínimo global mediante Búsqueda Aleatoria y se
+        van graficando los resultados 
+
+        Parameters:
+            None
+        
+        Returns:
+            None
+        """
+
+
+        # - Se itera calculando un valor aleatorio. 
+        # - Entre más iteraciones se hagan más probable es encontrar un resultado más cercano al mínimo global.
+        # - Este método utiliza fuerza bruta.
+        # - Se coloca un número pequeño de iteraciones porque al graficar y poder ver 
+        #   tanto el punto más acercado al resultado y el punto aleatoria se necesitan realizar pequeñas pausas.
         for i in range(100):
+
+            # Se calcula una posición (x,y) aleatoria
             self.x = self.xl + (self.xu - self.xl) * random()
             self.y = self.yl + (self.yu - self.yl) * random()
 
+            # Se evalua la función objetivo en el punto (x,y)
             f_val = self.f(self.x, self.y)
+
+            # Si el valor que se obtuvo es menor al que ya se consideraba "menor" (f_best), 
+            # entonces este valor se convierte en el nuevo punto más acertado en (x,y,f_best).
             if f_val < self.f_best:
                 self.f_best = f_val
                 self.x_best = self.x
                 self.y_best = self.y
 
+            # Graficamos el contour de la función. Dentro de esta se grafica también el valor
+            # aleatorio obtenido y el mejor valor hasta el momento
             self.__plot_contour()
 
             print("Ploteando {}, {}".format(self.x, self.y))
@@ -252,14 +328,41 @@ class RandomSearch:
                 round(self.x_best, 2), round(self.y_best, 2), round(self.f_best, 2)
             )
         )
+
+
+        # Esta línea es importante porque si no se pone, al terminar las iteraciones la gráfica
+        # de contour con el punto f_best o mínimo global se cerrará
         plt.show()
 
+
+
+    # Esta función realiza lo mismo que search(), exceptuando que en esta no se grafica, solo se obtiene
+    # el valor del mínimo global. Por esto se puede colocar muchas más iteraciones
     def search_lite(self):
+        """
+        Reliza la búsqueda del mínimo global mediante Búsqueda Aleatoria
+
+        Parameters:
+            None
+        
+        Returns:
+            None
+        """
+
+        # - Se itera calculando un valor aleatorio. 
+        # - Entre más iteraciones se hagan más probable es encontrar un resultado más cercano al mínimo global.
+        # - Este método utiliza fuerza bruta.
         for i in range(1000000):
+
+            # Se calcula una posición (x,y) aleatoria
             self.x = self.xl + (self.xu - self.xl) * random()
             self.y = self.yl + (self.yu - self.yl) * random()
 
+            # Se evalua la función objetivo en el punto (x,y)
             f_val = self.f(self.x, self.y)
+
+            # Si el valor que se obtuvo es menor al que ya se consideraba "menor" (f_best), 
+            # entonces este valor se convierte en el nuevo punto más acertado en (x,y,f_best).
             if f_val < self.f_best:
                 self.f_best = f_val
                 self.x_best = self.x
@@ -271,30 +374,104 @@ class RandomSearch:
             )
         )
 
+
+
+    # Función para graficar la superficie en 3D de la función objetivo en el rango especificado
     def plot_surface(self):
+        """
+        Grafica la superficie en 3D de la función ebjetivo en el rango especificado
+
+        Parameters:
+            None
+
+        Returns:
+            None
+        """
+
+        # Se crea una ventana nueva para graficar.
+        # Esto porque el contour puede ya estar en pantalla
         plt.figure()
+
+        # Le decimos a la libreria de graficas que queremos la proyección en 3D
         ax = plt.axes(projection="3d")
+
+        # Graficamos
         ax.plot_surface(self.X, self.Y, self.Z)
+
+        # Se ponen títulos a los ejes
         ax.set_xlabel("x")
         ax.set_ylabel("y")
         ax.set_zlabel("z")
+
+        # Mostramos la gráfica
         plt.show()
 
+
+
+
+    # - Función que grafica el contour de la función objetivo en el rango especificado,
+    #   el punto aleatorio obtenido en search() y el mejor punto encontrado hasta el momento (x_best, y_best) 
+    # - Esta función será llamada iterativamente
     def __plot_contour(self):
+        """
+        Grafica la funcion objetivo en el rango especificado y los puntos (x,y) y (x_best, y_best)
+        -------
+        Private
+        -------
+
+        Parameters:
+            None
+        
+        Returns:    
+            None
+        """
+
+        # Limpiamos el previo marcador que se había ploteado en la iteración anterior
         plt.clf()
+
+        # Graficamos nuestro contour con los vectores "x", "y" y "z"
         plt.contour(self.X, self.Y, self.Z)
 
+        # Ploteamos los puntos (x,y) y (x_best, y_best)
+        # Nota:
+        #   -> "bo" es para los puntos aleatorios
+        #   -> "go" es para el mejor punto encontrado
         self.__plot_point(self.x, self.y, "bo")
         self.__plot_point(self.x_best, self.y_best, "go")
+
+        # Realizamos una pausa para que se vea el progreso del "mejor" punto (x_best, y_best)
         plt.pause(0.005)
 
 
+
+    # Función que grafica un punto en la grafica 2D o contour, se llamará iterativamente
     def __plot_point(self, x, y, marker):
+        """
+        Plotea un punto en la grafica 2D (contour)
+        -------
+        Private
+        -------
+
+        Parameters:
+            x (Numeric): Posición en "x"
+            y (Numeric): Posición en "y"
+            marker (string) ['go'| "bo]: El tipo de marcador a plotear. Azul o verde 
+
+        Returns: 
+            None
+        """
+
+        # - El marcador verde es para el mejor punto encontrado por lo que se le agrega un label con el valor en "y"
+        # - Como el marcador azul va a esta cambiando muy rápido entre iteraciones, no se lo coloca un label
         if marker == "go":
             label = "{:.2f}".format(y)
+
+            # Anotamos el valor en "y" en la gráfica
             plt.annotate(
                 label, (x, y), textcoords="offset points", xytext=(0, 10), ha="center"
             )
+
+        # Ploteamos el punto
         plt.plot(x, y, marker)
 
 
