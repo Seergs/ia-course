@@ -47,7 +47,7 @@ class Newton:
     # Método ejecutado al instanciar la clase,
     # recibe valores iniciales, el rango para graficar, función objetivo,
     # y derivadas de función objetivo
-    def __init__(self, initial_values, value_range, f, fp, fpp):
+    def __init__(self, value_range, f, fp, fpp):
         """
         Inicializa la clase con los parametros inciales, la función objetivo y sus derivadas
 
@@ -62,12 +62,40 @@ class Newton:
                 None
 
         """
-        self.initial_values = initial_values
         self.range = value_range
         self.f = f
         self.fp = fp
         self.fpp = fpp
         print("\nClase instanciada, lista para calcular los máximos y mínimos\n")
+
+    def plot(self):
+        """
+        Grafica la función objetivo con matplotlib
+
+            Parameters:
+                None
+
+            Returns:
+                None
+        """
+
+        # Creamos un rango de valores entre el limite inferior y superior
+        # Este será nuestra x
+        x = np.arange(self.range[0], self.range[1], 0.1)
+
+        # Nuestra y la calculamos evaluando la función por cada valor de x
+        y = []
+
+        for value in x:
+            y.append(self.f(value))
+
+        # Ploteamos la función y los puntos críticos
+        plt.plot(x, y)
+
+        plt.title("Newton")
+        plt.xlabel("x")
+        plt.ylabel("f(x)")
+        plt.show()
 
     # Funcion para realizar el método newton para aproximar las
     # raices de la ecuación
@@ -98,16 +126,17 @@ class Newton:
 
     # Verifica en la segunda derivada, para saber si hay máximo
     # o minimo en las raices e imprime el resultado
-    def calculate(self):
+    def calculate(self, initial_values):
         """
         Calcula si las raíces son máximos o mínimos
 
             Parameters:
-                None
+               initial_values (list): Valores donde posiblemente exista una raíz 
 
             Returns:
                 None
         """
+        self.initial_values = initial_values
 
         # Obtenemos las raices
         roots = self.get_zeros_from_ecuation()
@@ -119,16 +148,24 @@ class Newton:
             # si obtenemos un valor negativo, tenemos un máximo
             evaluated = self.fpp(x_ri)
             if evaluated > 0:
-                print("\tMÍNIMO en: x={}".format(round(x_ri, 2)))
+                print(
+                    "\tMÍNIMO en: x={}, f(x)={}".format(
+                        round(x_ri, 2), round(self.f(x_ri), 2)
+                    )
+                )
             else:
-                print("\tMÁXIMO en: x={}".format(round(x_ri, 2)))
+                print(
+                    "\tMÁXIMO en: x={}, f(x)={}".format(
+                        round(x_ri, 2), round(self.f(x_ri), 2)
+                    )
+                )
 
-        self.plot(roots)
+        self.__plot_results(roots)
 
     # Función para graficar la función objetivo
-    def plot(self, roots):
+    def __plot_results(self, roots):
         """
-        Grafica la función objetivo con matplotlib
+        Grafica la función objetivo asíc como los puntos máximos y mínimos
 
             Parameters:
                 roots (list): Lista de raices de la función
@@ -160,27 +197,38 @@ class Newton:
 
 
 # Primera funcion, le pasamos las derivadas como lambda functions
-# newton = Newton(initial_values=[-3,-1,0.5], value_range=[-4,1],
+# newton = Newton(value_range=[-4,1],
 #    f=lambda x:  x**4 + 5*x**3 + 4*x**2 - 4*x + 1,
 #    fp=lambda x: 4*x**3 + 15*x**2 + 8*x - 4,
 #    fpp=lambda x: 12*x**2 + 30*x + 8
 # )
+# newton.calculate([-3,-1,0.5])
 
 
 # Segunda funcion, le pasamos las derivadas como lambda functions
-# newton = Newton(initial_values=[-4, -2.5, -1, 1, 2.5, 4], value_range=[-4,4],
+# newton = Newton(value_range=[-4,4],
 #   f=lambda x: math.sin(2*x),
 #   fp=lambda x: 2*math.cos(2*x),
 #   fpp=lambda x: -4*math.sin(2*x)
 # )
+# newton.calculate([-4,-2.5, -1, 1 ,2.5,4])
 
 # Tercera funcion, le pasamos las derivadas como lambda functions
-newton = Newton(
-    initial_values=[-3.9, -1, 1, 3.9],
-    value_range=[-5, 5],
-    f=lambda x: math.sin(x) + x * math.cos(x),
-    fp=lambda x: 2 * math.cos(x) - x * math.sin(x),
-    fpp=lambda x: -3 * math.sin(x) - x * math.cos(x),
-)
+# newton = Newton(
+#    value_range=[-5, 5],
+#    f=lambda x: math.sin(x) + x * math.cos(x),
+#    fp=lambda x: 2 * math.cos(x) - x * math.sin(x),
+#    fpp=lambda x: -3 * math.sin(x) - x * math.cos(x),
+# )
+# newton.calculate([-3.9, -1,1,3.9])
 
-newton.calculate()
+
+
+#Ejercicio 1
+newton = Newton(
+    value_range=[0,10],
+    f= lambda l: l * (20-2*l)**2,
+    fp= lambda l: 12*l**2 - 160 * l + 400,
+    fpp = lambda l: 24*l - 160
+)
+newton.calculate([3])
