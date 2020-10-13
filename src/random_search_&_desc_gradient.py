@@ -265,7 +265,7 @@ class RandomSearch:
         # Rango de valores entre el límite inferior y superior con una separación de 0.1
         # Se crea un rango tanto para "x" como para "y"
         self.x_range = np.arange(xl, xu, 0.1)
-        self.y_range = np.arange(xl, xu, 0.1)
+        self.y_range = np.arange(yl, yu, 0.1)
 
         # Nuestros vectores "x" y "y"
         self.X, self.Y = np.meshgrid(self.x_range, self.y_range)
@@ -548,7 +548,7 @@ class DescGradient:
         # Rango de valores entre el límite inferior y superior con una separación de 0.1
         # Se crea un rango tanto para "x" como para "y"
         self.x_range = np.arange(xl, xu, 0.1)
-        self.y_range = np.arange(xl, xu, 0.1)
+        self.y_range = np.arange(yl, yu, 0.1)
 
         # Nuestros vectores "x" y "y"
         self.X, self.Y = np.meshgrid(self.x_range, self.y_range)
