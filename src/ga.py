@@ -1,12 +1,12 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import unittest
+import operator
 
 def f(x1,x2):
     return (x1 - 2)**2 + (x2 - 2)**2
 
 
-class GA(unittest.TestCase):
+class GA:
     def __init__(self, f, pop_size=100, dimension=2, xl=-5, xu=5, yl=-5, yu=5):
 
         self.f=f
@@ -18,17 +18,18 @@ class GA(unittest.TestCase):
         self.yu=yu
         self.x = np.empty((dimension, pop_size))
         self.fitness={}
-
-    def plot_contour(self):
+        
         x_range = np.arange(self.xl, self.xu, 0.1)
         y_range = np.arange(self.yl, self.yu, 0.1)
+        self.X, self.Y = np.meshgrid(x_range, y_range)
+        self.Z = self.f(self.X, self.Y)
 
+    def plot(self):
+        
         # Nuestros vectores "x" y "y"
-        X, Y = np.meshgrid(x_range, y_range)
 
         # Calculamos nuestro vector "z" evaluando en la función objetivo "x" y "y"
-        Z = self.f(X, Y)
-        plt.contour(X, Y, Z)
+        plt.contour(self.X, self.Y, self.Z)
         plt.show()
 
     def start(self, generations=1000):
@@ -44,9 +45,12 @@ class GA(unittest.TestCase):
             childs = self._create_childs_by_selecting_parents()
             self._mutate(childs, 0.01,xl_vector,xu_vector)
             self.x = childs
+            self._plot_contour(i)
 
-        key = max(self.fitness)
-        print("Mínimo global en: {}".format(self.x[:,key]))
+        plt.show()
+    
+        x_best, y_best = self._get_best_fitness()
+        print("Mínimo global en x={}, y={}, f(x)={}\n".format(round(x_best,2), round(y_best,2), round(self.f(x_best, y_best),2)))
 
         
 
@@ -124,6 +128,29 @@ class GA(unittest.TestCase):
         
         return N
 
+    def _get_best_fitness(self):
+        key = max(self.fitness.items(), key=operator.itemgetter(1))[0]
+
+        return self.x[0,key], self.x[1,key]
+
+    def _plot_contour(self, i):
+        plt.clf()
+
+        plt.contour(self.X, self.Y, self.Z)
+
+
+
+        x,y = self._get_best_fitness()
+        self._plot_point(x,y, i)
+        plt.pause(0.005)
+    
+    def _plot_point(self, x, y, i):
+        plt.title("Generación {}".format(i))
+        label = "{:.2f},{:.2f}".format(x,y)
+        plt.annotate(label, (x,y), textcoords="offset points", xytext=(0,10), ha="center")
+        plt.plot(x,y, 'ro')
+
 
 ga = GA(f, pop_size=200)
-ga.start(generations=1000)
+#ga.plot()
+ga.start(generations=20)
