@@ -131,7 +131,7 @@ class Newton:
         Calcula si las raíces son máximos o mínimos
 
             Parameters:
-               initial_values (list): Valores donde posiblemente exista una raíz 
+               initial_values (list): Valores donde posiblemente exista una raíz
 
             Returns:
                 None
@@ -223,12 +223,11 @@ class Newton:
 # newton.calculate([-3.9, -1,1,3.9])
 
 
-
-#Ejercicio 1
-#newton = Newton(
+# Ejercicio 1
+# newton = Newton(
 #    value_range=[0,10],
 #    f= lambda l: l * (20-2*l)**2,
 #    fp= lambda l: 12*l**2 - 160 * l + 400,
 #    fpp = lambda l: 24*l - 160
-#)
-#newton.calculate([3])
+# )
+# newton.calculate([3])
