@@ -1,13 +1,114 @@
+#   Sergio Suárez Álvarez
+#   217758497
+#   Seminario de solución de problemas de Inteligencia Artificial 1
+#   
+#   Este programa busca el mínimo global de una función
+#   usando un algoritmo genético clásico.
+#   Para más información sobre el GA, visite https://towardsdatascience.com/introduction-to-genetic-algorithms-including-example-code-e396e98d8bf3#:~:text=A%20genetic%20algorithm%20is%20a,offspring%20of%20the%20next%20generation
+#
+#
+#
+
+'''
+    Encuentra el mínimo global de una función
+
+    Classes:
+
+        GA
+
+    Variables:
+        ga
+
+'''
+
+
+# Librerías necesarias para el correcto funcionamiento
+# de nuestro programa
 import matplotlib.pyplot as plt
 import numpy as np
 import operator
 
 
-def f(x1, x2):
-    return (x1 - 2) ** 2 + (x2 - 2) ** 2
+# Función objetivo 2
+def f2(x1, x2):
+    '''
+    Evalúa la función objetivo en el punto x,y
+
+        Parameters:
+            x (Numeric): coordenada en el eje "x"
+            y (Numeric): coordenada en el eje "y"
+
+        Returns:
+            z (Numeric): valor de la función en x,y
+
+    '''
+
+    # Evaluamos la función objetivo en x,y
+    z = (x1 - 2) ** 2 + (x2 - 2) ** 2
+
+    return z
 
 
+
+
+
+
+# Clase para ejecutar el algoritmo genético
 class GA:
+    """
+    Clase que ejecuta el algoritmo genético para obtener
+    el mínimo global (aproximado) de una función
+
+
+    Attributes
+    ----------
+    f: function
+        Función objetivo a la cual se le calculará el mínimo global
+    pop_size: Numeric
+        El tamaño de la población de las posibles soluciones
+    dimension: Numeric
+        La dimensión o número de variables a calcular
+    xl: Numeric
+        Límite inferior en "x"
+    xu: Numeric
+        Límite superior en "x"
+    yl: Numeric
+        Límite inferior en "y"
+    yu: Numeric
+        Límite superior en "y"
+    x: ndarray
+        Matriz con la población de posibles soluciones
+    fitness: dictionary
+        Lista de aptitudes de la población
+    X: array
+        Lista de una dimensión que representa coordenadas de una matriz, para
+        graficar el vector "x"
+    Y: array
+        Lista de una dimensión que representa coordenadas de una matriz, para
+        graficar el vector "y"
+    Z: array
+        Lista de una dimensión que representa coordenadas de una matriz, para
+        graficar el vector "z"
+
+    
+    Methods
+    -------
+    plot():
+        Grafica la función en el rango especificado
+    start(generations):
+        Inicia la simulación hasta completar las generaciones
+    _initialize(xl_vector, xu_vector):
+        Inicializa a la población con valores aleatorios
+    _evaluation():
+        Evalúa cada individuo de la población para opbtener su aptitud
+    _create_childs_by_selecting_parents():
+        Itera por la población, seleccionando a dos padres para crear hijos
+    _mix(first_parent, second_parent):
+        Cruza entre dos padres para crear dos hijos, intercambiando el material genético
+    _mutate(y, pm, xl, xu):
+        Muta a los hijos con una probablidad baja
+    """
+
     def __init__(self, f, pop_size=100, dimension=2, xl=-5, xu=5, yl=-5, yu=5):
 
         self.f = f
@@ -145,6 +246,6 @@ class GA:
         plt.plot(x, y, "ro")
 
 
-ga = GA(f, pop_size=200)
+ga = GA(f2, pop_size=200)
 # ga.plot()
 ga.start(generations=20)
