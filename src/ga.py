@@ -171,12 +171,14 @@ class GA:
         plt.show()
 
     # Función inicial que comenza con la simulación del algoritmo genético
-    def start(self, generations=1000):
+    def start(self, generations=1000, plot=True):
         """
         Utiliza el algoritmo genético para simular la evolución
 
             Parameters:
                 generations (Numeric): Número de iteraciones (generaciones) a realizar
+                plot (Boolean): Indica si se graficará o no. False no se grafica, True se grafica
+
 
             Returns:
                 None
@@ -209,10 +211,12 @@ class GA:
             self.x = childs
 
             # Se grafica en el contour el punto con mejor aptitud
-            self._plot_contour(i)
+            if plot:
+                self._plot_contour(i)
 
         # Esta línea nos permite tener la gráfica "abierta" mientras el algoritmo sigue corriendo
-        plt.show()
+        if plot:
+            plt.show()
 
         # Finalmente obtenemos nuestro vector con mejor aptitud
         x_best, y_best = self._get_best_fitness()
@@ -472,4 +476,4 @@ ga = GA(f2, pop_size=200)
 # ga.plot()
 
 # Se inicia la simulación con 1000 generaciones
-ga.start(generations=100)
+ga.start(generations=100, plot=False)
