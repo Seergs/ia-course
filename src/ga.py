@@ -29,6 +29,26 @@ import numpy as np
 import operator
 
 
+
+# Función objetivo 1
+def f1(x,y):
+    """
+    Evalúa la función objetivo en el punto x,y
+
+        Parameters:
+            x (Numeric): coordenada en el eje "x"
+            y (Numeric): coordenada en el eje "y"
+
+        Returns:
+            z (Numeric): valor de la función en x,y
+
+    """
+
+    # Evaluamos la función objetivo en x,y
+    z = x*np.e**(-x**2-y**2)
+
+    return z
+
 # Función objetivo 2
 def f2(x1, x2):
     """
@@ -108,7 +128,7 @@ class GA:
     # Método ejecutado al instanciar la clase, recibe la función objetivo,
     # el tamaño de la población (con valor por defecto de 100),
     # y los límites tanto superior como inferior de "x" y "y"
-    def __init__(self, f, pop_size=100, xl=-5, xu=5, yl=-5, yu=5):
+    def __init__(self, f, xl, xu, yl, yu, pop_size=100):
         """
         Inicializa la clase con el rango de valores, la función objetivo
         y el tamaño de la población
@@ -470,10 +490,19 @@ class GA:
         plt.plot(x, y, "ro")
 
 
-# Se instancia la clase con la función objetivo y una población de 200
-ga = GA(f2, pop_size=200)
+
+
+# Se instancia la clase con la función objetivo 1 y una población de 200
+ga = GA(f1, xl=-2, xu=2, yl=-2, yu=2, pop_size=200)
+
+
+# Se instancia la clase con la función objetivo 2 y una población de 200
+#ga = GA(f2, xl=-5, xu=5, yl=-5, yu=5, pop_size=200)
+
+
 
 # ga.plot()
 
 # Se inicia la simulación con 1000 generaciones
-ga.start(generations=100, plot=False)
+ga.start(generations=1000, plot=False)
+
