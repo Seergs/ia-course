@@ -493,16 +493,13 @@ class GA:
 
 
 # Se instancia la clase con la función objetivo 1 y una población de 200
-ga = GA(f1, xl=-2, xu=2, yl=-2, yu=2, pop_size=200)
+#ga = GA(f1, xl=-2, xu=2, yl=-2, yu=2, pop_size=100)
 
 
-# Se instancia la clase con la función objetivo 2 y una población de 200
-#ga = GA(f2, xl=-5, xu=5, yl=-5, yu=5, pop_size=200)
+#Se instancia la clase con la función objetivo 2 y una población de 100
+#ga = GA(f2, xl=-5, xu=5, yl=-5, yu=5, pop_size=100)
 
 
+#ga.start(generations=1000, plot=False)
 
-# ga.plot()
-
-# Se inicia la simulación con 1000 generaciones
-ga.start(generations=1000, plot=False)
-
+#ga.plot()
