@@ -500,6 +500,4 @@ class GA:
 #ga = GA(f2, xl=-5, xu=5, yl=-5, yu=5, pop_size=100)
 
 
-#ga.start(generations=1000, plot=False)
-
-#ga.plot()
+#ga.start(generations=1000, plot=True)
