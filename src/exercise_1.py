@@ -1,5 +1,4 @@
-from src.newton import Newton
-
+from newton import Newton
 
 # Ejercicio 1
 newton = Newton(
