@@ -1,3 +1,17 @@
+##
+##
+##
+##      Sergio Suárez Álvarez
+##      217758497 INCO
+## 
+##
+##      Este programa calcula el mínimo global de una función
+##      para encontrar la recta de la regresión lineal en base
+##      a una serie de puntos dados
+##
+##
+##
+
 from scipy.io import loadmat
 import numpy as np
 import matplotlib.pyplot as plt
@@ -274,15 +288,27 @@ def f(m,b):
 
 
 #--------------------------- Búsqueda Aleatoria ----------------------------------
-#random_search = RandomSearch(f, xl=0, xu=2, yl=0, yu=1)
-#m,b = random_search.search()
+random_search = RandomSearch(f, xl=0, xu=2, yl=0, yu=1)
+m,b = random_search.search()
 
 
 #------------------------------ Gradiente descendiente ----------------------------
 
 # Derivada parcial de la función objetivo con respecto a "m"
 def gradient_func_m(m,b):
-    
+    """
+    Calcula el gradiente usando la derivada parciale en base a "m" de
+    la función objetivo
+
+        Parameters:
+            m (Numeric): valor del actual "m", mejor conocido como xi
+            b (Numeric): valor del actual "b", mejor conocido como yi
+
+        Returns:
+            value (Numeric): el valor del gradiente en m (xi,yi)
+    """
+
+    # Calculamos el valor mediante la derivada parcial con respecto a "x"
     value = -(1/n) * ((Y - X) * m + b * X).sum()
     return value 
 
@@ -290,12 +316,24 @@ def gradient_func_m(m,b):
 # Derivada parcial de la función objetivo con respecto a "b"
 def gradient_func_b(m,b):
     
+    """
+    Calcula el gradiente usando la derivada parciale en base a "b" de
+    la función objetivo
+
+        Parameters:
+            m (Numeric): valor del actual "m", mejor conocido como xi
+            b (Numeric): valor del actual "b", mejor conocido como yi
+
+        Returns:
+            value (Numeric): el valor del gradiente en m (xi,yi)
+    """
+   
     value = -(1/n) * (Y-(X * m + b)).sum()
     return value 
 
 
-gradient = DescGradient(f, xl=0, xu=2, yl=0, yu=1)
-m,b = gradient.search(0.8, 0.2, gradient_func_m, gradient_func_b)
+#gradient = DescGradient(f, xl=0, xu=2, yl=0, yu=1)
+#m,b = gradient.search(0.8, 0.2, gradient_func_m, gradient_func_b)
 
 
 
