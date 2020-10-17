@@ -15,11 +15,7 @@
 from scipy.io import loadmat
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib import cm
-import math
 from random import random
-from mpl_toolkits import mplot3d
-import time
 
 class RandomSearch:
     """
