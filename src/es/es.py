@@ -68,6 +68,40 @@ class ES:
         Matriz que contiene las varianzas estándar de la distribución de probabilidad de la población
     _fitness: ndarray
         Vector que contiene las aptitutes de la población
+    X: array
+        Lista de una dimensión que representa coordenadas de una matriz, para graficar el vector "x"
+    Y: array
+        Lista de una dimensión que representa coordenadas de una matriz, para graficar el vector "y"
+    Z: array
+        Lista de una dimensión que representa coordenadas de una matriz, para graficar el vector "z"
+
+
+    Methods
+    -------
+    calculate():
+        Calcula el mínimo global de la función
+    plot():
+        Grafica el contour la función
+    _select_new_population():
+        Selecciona a los nuevos individuos para la siguiente generación
+    _select_index_by_fitness(select_parents):
+        Retorna el individuo con mejor aptitud
+    _create_random_vector():
+        Genera un vector aleatorio que se le sumará a los individuos
+    _combine_parents(parent_1, parent_2):
+        Crea un hijo en base a los padres
+    _select_parents():
+        Selecciona dos padres aleatorios
+    _initialize_population():
+        Inicializa los individuos de la población
+    _create_random_individual():
+        Crea una tupla con la información aleatoria para un individuo
+    _create_random_sigma():
+        Crea una varianza estándar aleatoria positiva para un individuo
+    _plot_contour(generation):
+        Grafica una generación en el contour de la función
+    _plot_point(x,y):
+        Grafica un punto en "x" y "y" en el contour de la función
     """
     def __init__(self, f, xu, xl, generations, mu, lambda_, dimension, version=1):
         self._f = f
@@ -119,7 +153,6 @@ class ES:
 
         return self._x[0,0], self._x[1,0], self._fitness[0,0]
 
-    
     def _select_new_population(self):
         new_x = np.zeros((self._dimension, self._mu+self._lambda))
         new_fitness = np.zeros((1, self._mu+self._lambda))
@@ -134,7 +167,6 @@ class ES:
 
         return new_x, new_sigma, new_fitness
 
-
     def _select_index_by_fitness(self, select_parents=True):
         if select_parents:
             index = np.where(self._fitness == np.min(self._fitness[0]))[1][0]
@@ -142,7 +174,6 @@ class ES:
             index = np.where(self._fitness == np.min(self._fitness[0,30:]))[1][0]
         return index
 
-    
     def _create_random_vector(self):
         vector = np.random.normal(0, self._sigma[:,self._mu+1])
 
@@ -153,7 +184,6 @@ class ES:
 
         return child
 
-    
     def _select_parents(self):
         parent_1 = random.randint(0,self._mu)
 
@@ -164,15 +194,12 @@ class ES:
         
         return parent_1, parent_2
 
-
-
     def _initialize_population(self):
         for i in range(self._mu):
             self._x[:,i] = self._create_random_individual()
             self._sigma[:,i] = self._create_random_sigma()
             self._fitness[0,i] = self._f(self._x[0,i], self._x[1,i])
 
-    
     def _create_random_individual(self):
         new_individual = self._xl + (self._xu - self._xl) * np.array((np.random.random(), np.random.random()))
         return new_individual
@@ -209,12 +236,28 @@ class ES:
 
 
 
-def f(x,y):
+
+# Función objetivo 1
+def f_1(x,y):
+    """
+    Evalúa la función objetivo en "x" y "y"
+
+        Parameters:
+            x (Numeric): Valor en "x" a evaluar
+            y (Numeric): Valor en "y" a evaluar
+        
+        Returns:
+            z (Numeric): Valor de la función evaluada en (x,y)
+    """
+
+
     z = (x-2)**2 + (y-2)**2
+
     return z
 
 
-es = ES(f=f, xu=np.array((5,5)),xl=np.array((-5,-5)), generations=200, mu=30, lambda_=50, dimension=2, version=2)
-#es.plot()
+
+# Instanciación de la clase con la función objetivo 1
+es = ES(f=f_1, xu=np.array((5,5)),xl=np.array((-5,-5)), generations=200, mu=30, lambda_=50, dimension=2, version=1)
 x,y,fx = es.calculate()
-print(x,y,fx)
+print("Mínimo global en x={}, y={}, f(x)={}".format(x,y,fx))
