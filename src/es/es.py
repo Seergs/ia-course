@@ -103,22 +103,49 @@ class ES:
     _plot_point(x,y):
         Grafica un punto en "x" y "y" en el contour de la función
     """
+
+
+
+    # Método ejecutado al instanciar la clase, recibe la función objetivo,
+    # el número de generaciones, los límites y el número de individuos de la población
     def __init__(self, f, xu, xl, generations, mu, lambda_, dimension, version=1):
+        """
+        Inicializa la clase
+
+            Parameters:
+                f (Function): Función que retorna el valor al evaluar la función objetivo en un punto
+                xu (ndarray): Vector con los límites superiores de la función
+                xl (ndarray): Vector con los límites inferiores de la función
+                generations (integer): Número de generaciones para la simulación
+                mu (integer): Número de padres de la población
+                lambda_ (integer): Número de hijos de la población
+                dimension (integer): Dimensión de la función
+                version (integer): Versión del algoritmo a realizar. 1 = (μ + λ)-ES, 2 = (μ, λ)-ES
+
+            Returns: 
+                None
+        """
+
+
         self._f = f
         self._xu = xu
         self._xl = xl
-        self._generations = generation
+        self._generations = generations
         self._mu = mu
         self._lambda = lambda_
         self._dimension = dimension
         self._version = version
 
 
+
+        # Inicializamos nuestras matrices
         self._x = np.zeros((self._dimension, self._mu+self._lambda))
         self._sigma = np.zeros((self._dimension, self._mu+self._lambda))
         self._fitness = np.zeros((1, self._mu+self._lambda))
 
 
+
+        # Las siguientes líneas nos ayudan para graficar
         x_range = np.arange(self._xl[0], self._xu[0], 0.1)
         y_range = np.arange(self._xl[1], self._xu[1], 0.1)
 
@@ -128,38 +155,97 @@ class ES:
         # Calculamos nuestro vector "z" evaluando en la función objetivo "x" y "y"
         self.Z = self._f(self.X, self.Y)
 
+
+
+
+
+    # Método que realiza la simulación de la estrategia evolutiva mediante
+    # 1. Selección aleatoria de padres
+    # 2. Recombinación de los padres para generar un hijo
+    # 3. Ir ajustando mediante la suma de un vector "r"
+    # 4. Los mejores individuos se convierten en los nuevos padres
     def calculate(self):
+        """
+        Realiza la simulación de la estrategia evolutiva
+
+            Parameters:
+                None
+            
+            Returns: 
+                x (Numeric): Valor en "x" donde se encuentra el mínimo global
+                y (Numeric): Valor en "y" donde se encuentra el mínimo global
+                z (Numeric): Valor en "z" donde se encuentra el mínimo global
+        """
+
+
+        # Inicializamos la población aleatoria
         self._initialize_population()
+
+
 
         for i in range(self._generations):
             for j in range(self._lambda):
+                
+                # Selección de padres
                 r1, r2 = self._select_parents()
 
+
+                # Recombinación de dos padres para crear un hijo
                 self._x[:, self._mu+j] = self._combine_parents(r1,r2)
                 self._sigma[:, self._mu+j]=self._combine_parents(self._sigma[:,r1], self._sigma[:,r2])
 
+
+                # Ajuste mediante el vector
                 r = self._create_random_vector()
                 self._x[:,self._mu+j] += r
 
+
+                # Cálculo de la aptitud
                 self._fitness[0,self._mu+j] = self._f(self._x[0, self._mu+j], self._x[1, self._mu+j])
 
             
             self._plot_contour(i)
 
-
+            # Se seleccionan los individuos que serán la nueva población
             self._x, self._sigma, self._fitness = self._select_new_population()
 
         plt.show()
 
-        return self._x[0,0], self._x[1,0], self._fitness[0,0]
+        x = self._x[0,0]
+        y = self._x[1,0]
+        z = self._fitness[0,0]
+        return x, y, z
 
+
+
+
+    # Método que selecciona los mejores individuos de la población
     def _select_new_population(self):
+        """
+        Selecciona los mejores individuos de la población
+
+            Parameters:
+                None
+            
+            Returns:
+                new_x (ndarray): Matriz con la nueva población
+                new_sigma (ndarray): Matriz con las nuevas varianzas estándar
+                new_fitness (ndarray): Vector con las nuevas aptitudes
+        """
+
+
+
         new_x = np.zeros((self._dimension, self._mu+self._lambda))
         new_fitness = np.zeros((1, self._mu+self._lambda))
         new_sigma = np.zeros((self._dimension, self._mu+self._lambda))
 
+
         for i in range(self._mu):
+
+            # Dependiendo de la versión del algoritmo se eligen entre todos lo invididuos o solo los hijos
             index = self._select_index_by_fitness(select_parents=True if self._version == 1 else False)
+
+
             new_x[:,i] = self._x[:, index]
             new_sigma[:,i] = self._sigma[:,index]
             new_fitness[0,i] = self._fitness[0,index]
@@ -167,7 +253,21 @@ class ES:
 
         return new_x, new_sigma, new_fitness
 
+
+
+    # Método que obtiene el índice del mejor individuo de la población
     def _select_index_by_fitness(self, select_parents=True):
+        """
+        Retorna el índice del individuo con mejor aptitud de la población
+
+            Parametes:
+                select_parents (Boolean): Define si la búsqueda será solo en los hijos o también en los padres
+
+            Returns:
+                index (integer): Índice del mejor individuo de la población
+        """
+
+
         if select_parents:
             index = np.where(self._fitness == np.min(self._fitness[0]))[1][0]
         else:
@@ -222,8 +322,7 @@ class ES:
         # Ploteamos la gráfica
         plt.contour(self.X, self.Y, self.Z)
 
-        for i in range(self._mu):
-            self._plot_point(self._x[0,i], self._x[1,i])
+        self._plot_point(self._x[0,0], self._x[1,0])
 
         plt.xlabel("x")
         plt.ylabel("y")
@@ -232,13 +331,34 @@ class ES:
         plt.pause(0.005)
     
     def _plot_point(self, x, y):
+        label = "{:.2f},{:.2f}".format(x, y)
+        plt.annotate(
+            label, (x, y), textcoords="offset points", xytext=(0, 10), ha="center"
+        )
         plt.plot(x, y, "ro")
-
 
 
 
 # Función objetivo 1
 def f_1(x,y):
+    """
+    Evalúa la función objetivo en "x" y "y"
+
+        Parameters:
+            x (Numeric): Valor en "x" a evaluar
+            y (Numeric): Valor en "y" a evaluar
+        
+        Returns:
+            z (Numeric): Valor de la función evaluada en (x,y)
+    """
+
+    z = x*np.e**(-x**2-y**2)
+
+    return z
+
+
+# Función objetivo 2
+def f_2(x,y):
     """
     Evalúa la función objetivo en "x" y "y"
 
@@ -258,6 +378,10 @@ def f_1(x,y):
 
 
 # Instanciación de la clase con la función objetivo 1
-es = ES(f=f_1, xu=np.array((5,5)),xl=np.array((-5,-5)), generations=200, mu=30, lambda_=50, dimension=2, version=1)
+#es = ES(f=f_1, xu=np.array((2,2)), xl=np.array((-2,-2)), generations=200, mu=30, lambda_=50, dimension=2, version=1)
+
+
+# Instanciación de la clase con la función objetivo 2
+es = ES(f=f_2, xu=np.array((2,2)),xl=np.array((1,1)), generations=200, mu=30, lambda_=50, dimension=2, version=1)
 x,y,fx = es.calculate()
 print("Mínimo global en x={}, y={}, f(x)={}".format(x,y,fx))
