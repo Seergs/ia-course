@@ -29,9 +29,8 @@ import numpy as np
 import operator
 
 
-
 # Función objetivo 1
-def f1(x,y):
+def f1(x, y):
     """
     Evalúa la función objetivo en el punto x,y
 
@@ -45,9 +44,10 @@ def f1(x,y):
     """
 
     # Evaluamos la función objetivo en x,y
-    z = x*np.e**(-x**2-y**2)
+    z = x * np.e ** (-(x ** 2) - y ** 2)
 
     return z
+
 
 # Función objetivo 2
 def f2(x1, x2):
@@ -490,14 +490,12 @@ class GA:
         plt.plot(x, y, "ro")
 
 
-
-
 # Se instancia la clase con la función objetivo 1 y una población de 200
 ga = GA(f1, xl=-2, xu=2, yl=-2, yu=2, pop_size=100)
 
 
-#Se instancia la clase con la función objetivo 2 y una población de 100
-#ga = GA(f2, xl=-5, xu=5, yl=-5, yu=5, pop_size=100)
+# Se instancia la clase con la función objetivo 2 y una población de 100
+# ga = GA(f2, xl=-5, xu=5, yl=-5, yu=5, pop_size=100)
 
 
 ga.start(generations=10, plot=True)

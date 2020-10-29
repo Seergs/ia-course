@@ -3,7 +3,7 @@
 ##
 ##      Sergio Suárez Álvarez
 ##      217758497 INCO
-## 
+##
 ##
 ##      Este programa calcula el mínimo global de una función
 ##      para encontrar la recta de la regresión lineal en base
@@ -16,6 +16,7 @@ from scipy.io import loadmat
 import numpy as np
 import matplotlib.pyplot as plt
 from random import random
+
 
 class RandomSearch:
     """
@@ -95,10 +96,7 @@ class RandomSearch:
         self.yl = yl
         self.yu = yu
 
-
-
-
-    #Función para calcular el mínimo global.
+    # Función para calcular el mínimo global.
     def search(self):
         """
         Reliza la búsqueda del mínimo global mediante Búsqueda Aleatoria
@@ -132,7 +130,7 @@ class RandomSearch:
 
         print(
             "\n\nBúsqueda Aleatoria: Mínimo global en m={}, b={}, f(x)={}\n".format(
-                round(self.x_best,2), round(self.y_best,2), round(self.f_best[0],2)
+                round(self.x_best, 2), round(self.y_best, 2), round(self.f_best[0], 2)
             )
         )
 
@@ -182,9 +180,6 @@ class DescGradient:
         Además va graficando los valores encontrados y aproximaciones
     """
 
-
-
-
     # Método ejecutado al instanciar la clase, recibe la función objetivo y
     # el rango de valores en el cual se buscará el mínimo global
     def __init__(self, f, xl=-10, xu=10, yl=-10, yu=10):
@@ -211,7 +206,6 @@ class DescGradient:
 
         # El factor de cambio para el gradiente. Se usa un valor pequeño
         self.h = 0.1
-
 
     # Esta función realiza lo mismo que search(), exceptuando que en esta no se grafica, solo se obtiene
     # el valor del mínimo global. Por esto se puede colocar muchas más iteraciones
@@ -255,43 +249,42 @@ class DescGradient:
 
         print(
             "\n\nGradiente descendente: Mínimo global en x={}, y={}, f(x)={}\n\n".format(
-                round(self.xi,2), round(self.yi,2), round(self.f(self.xi, self.yi)[0],2)
+                round(self.xi, 2),
+                round(self.yi, 2),
+                round(self.f(self.xi, self.yi)[0], 2),
             )
         )
 
         return self.xi, self.yi
 
 
-
-
-
 # Cargamos los datos para nuestra regresión lineal
-data = loadmat('src/exercise_2.mat')
+data = loadmat("src/exercise_2.mat")
 
 # El tamaño del vector "x" de los datos
-n = len(data['X'])
+n = len(data["X"])
 
 # Separamos los datos en "x" y "y"
-X = data['X']
-Y = data['Y']
+X = data["X"]
+Y = data["Y"]
 
 
-#Función objetivo
-def f(m,b):
-    value = (1/(2*n)) * sum((Y - (X*m+b))**2)
-    
+# Función objetivo
+def f(m, b):
+    value = (1 / (2 * n)) * sum((Y - (X * m + b)) ** 2)
+
     return value
 
 
-#--------------------------- Búsqueda Aleatoria ----------------------------------
+# --------------------------- Búsqueda Aleatoria ----------------------------------
 random_search = RandomSearch(f, xl=0, xu=2, yl=0, yu=1)
-m,b = random_search.search()
+m, b = random_search.search()
 
 
-#------------------------------ Gradiente descendiente ----------------------------
+# ------------------------------ Gradiente descendiente ----------------------------
 
 # Derivada parcial de la función objetivo con respecto a "m"
-def gradient_func_m(m,b):
+def gradient_func_m(m, b):
     """
     Calcula el gradiente usando la derivada parciale en base a "m" de
     la función objetivo
@@ -305,13 +298,13 @@ def gradient_func_m(m,b):
     """
 
     # Calculamos el valor mediante la derivada parcial con respecto a "x"
-    value = -(1/n) * ((Y - X) * m + b * X).sum()
-    return value 
+    value = -(1 / n) * ((Y - X) * m + b * X).sum()
+    return value
 
 
 # Derivada parcial de la función objetivo con respecto a "b"
-def gradient_func_b(m,b):
-    
+def gradient_func_b(m, b):
+
     """
     Calcula el gradiente usando la derivada parciale en base a "b" de
     la función objetivo
@@ -323,28 +316,27 @@ def gradient_func_b(m,b):
         Returns:
             value (Numeric): el valor del gradiente en m (xi,yi)
     """
-   
-    value = -(1/n) * (Y-(X * m + b)).sum()
-    return value 
+
+    value = -(1 / n) * (Y - (X * m + b)).sum()
+    return value
 
 
-#gradient = DescGradient(f, xl=0, xu=2, yl=0, yu=1)
-#m,b = gradient.search(0.8, 0.2, gradient_func_m, gradient_func_b)
-
+# gradient = DescGradient(f, xl=0, xu=2, yl=0, yu=1)
+# m,b = gradient.search(0.8, 0.2, gradient_func_m, gradient_func_b)
 
 
 # ---------------------------- Graficación -------------------------------
 
 # Se crea un conjunto de valores entre el rango para graficar la linea de
 # la regresión lineal
-xp = np.arange(-5,15,0.1)
+xp = np.arange(-5, 15, 0.1)
 
-# Se obtiene los valores en "y" en base a "m" y "b" obtenidos con los métodos anteriores 
-yp = xp*m+b
+# Se obtiene los valores en "y" en base a "m" y "b" obtenidos con los métodos anteriores
+yp = xp * m + b
 
 # Ploteamos
-plt.title('Regresión lineal')
-plt.plot(X,Y, 'ro', label="Muestras")
-plt.plot(xp,yp, 'b-', label="Regresión")
+plt.title("Regresión lineal")
+plt.plot(X, Y, "ro", label="Muestras")
+plt.plot(xp, yp, "b-", label="Regresión")
 plt.legend(loc="upper left")
 plt.show()

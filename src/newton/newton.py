@@ -197,12 +197,13 @@ class Newton:
 
 
 # Primera funcion, le pasamos las derivadas como lambda functions
-newton = Newton(value_range=[-4,1],
-    f=lambda x:  x**4 + 5*x**3 + 4*x**2 - 4*x + 1,
-    fp=lambda x: 4*x**3 + 15*x**2 + 8*x - 4,
-    fpp=lambda x: 12*x**2 + 30*x + 8
-    )
-newton.calculate([-3,-1,0.5])
+newton = Newton(
+    value_range=[-4, 1],
+    f=lambda x: x ** 4 + 5 * x ** 3 + 4 * x ** 2 - 4 * x + 1,
+    fp=lambda x: 4 * x ** 3 + 15 * x ** 2 + 8 * x - 4,
+    fpp=lambda x: 12 * x ** 2 + 30 * x + 8,
+)
+newton.calculate([-3, -1, 0.5])
 
 
 # Segunda funcion, le pasamos las derivadas como lambda functions
@@ -221,5 +222,3 @@ newton.calculate([-3,-1,0.5])
 #    fpp=lambda x: -3 * math.sin(x) - x * math.cos(x),
 # )
 # newton.calculate([-3.9, -1,1,3.9])
-
-
