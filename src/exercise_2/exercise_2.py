@@ -259,7 +259,7 @@ class DescGradient:
 
 
 # Cargamos los datos para nuestra regresión lineal
-data = loadmat("src/exercise_2.mat")
+data = loadmat("src/exercise_2/exercise_2.mat")
 
 # El tamaño del vector "x" de los datos
 n = len(data["X"])

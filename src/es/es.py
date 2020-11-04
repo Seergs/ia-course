@@ -471,8 +471,8 @@ def f_2(x, y):
 # Instanciación de la clase con la función objetivo 2
 es = ES(
     f=f_2,
-    xu=np.array((5, 5)),
-    xl=np.array((-5, -5)),
+    xu=np.array((2, 2)),
+    xl=np.array((1, 1)),
     generations=200,
     mu=30,
     lambda_=50,
@@ -481,7 +481,6 @@ es = ES(
 )
 
 
-# es.plot("Resultado")
 x, y, fx = es.calculate()
 print(
     "\n\nMínimo global en x={}, y={}, f(x)={}\n\n".format(
