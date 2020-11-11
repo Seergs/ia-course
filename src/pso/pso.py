@@ -83,6 +83,9 @@ class PSO:
         plt.title("Generación {}".format(generation))
 
         plt.contour(self.X, self.Y, self.Z)
+        axes = plt.gca()
+        axes.set_xlim([self._xl[0], self._xu[0]])
+        axes.set_ylim([self._xl[1], self._xu[1]])
 
         for i in range(self._swarm_size):
             self._plot_point(self._x[0, i], self._x[1, i])
@@ -103,12 +106,28 @@ class PSO:
         plt.show()
 
 
-def sphere(x,y):
-    z = x**2+y**2
+def sphere(x1,x2):
+    z = x1**2+x2**2
 
     return z
 
+def griewank(x1,x2):
+    sumatory = (x1**2/4000)+(x2**2/4000)
+    product = np.cos(x1/np.sqrt(1))*np.cos(x2/np.sqrt(2))
 
-pso = PSO(f=sphere, xl=np.array((-5,-5)), xu=np.array((5,5)), swarm_size=25, dimension=2)
+    z = sumatory - product + 1
+
+    return z
+
+def rastrigin(x1,x2):
+    sumatory = (x1**2 - 10*np.cos(2*np.pi*x1)) + (x2**2 - 10*np.cos(2*np.pi*x2))
+    z = 20 + sumatory
+
+
+    return z
+
+pso = PSO(f=sphere, xl=np.array((-5,-5)), xu=np.array((5,5)), swarm_size=50, dimension=2)
+#pso = PSO(f=griewank, xl=np.array((-5,-5)), xu=np.array((5,5)), swarm_size=50, dimension=2)
+#pso = PSO(f=rastrigin, xl=np.array((-5,-5)), xu=((5,5)), swarm_size=50, dimension=2)
 x_best, y_best, f_best = pso.simulate(50, plot=True)
-print("Mínimo global encontrado en x={}, y={}, f(x)={}".format(round(x_best,3), round(y_best,3), round(f_best,3)))
+print("Mínimo global encontrado en x={}, y={}, f(x)={}".format(x_best, y_best, f_best))
