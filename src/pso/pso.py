@@ -292,10 +292,10 @@ class PSO:
         plt.show()
 
 
-# Función objetivo 1
+# Función objetivo 3
 def sphere(x1, x2):
     """
-    Función objetivo 1
+    Función objetivo 3
 
         Parameters:
             x1 (numeric): Valor en "x" a evaluar
@@ -309,10 +309,10 @@ def sphere(x1, x2):
     return z
 
 
-# Función objetivo 2
+# Función objetivo 1
 def griewank(x1, x2):
     """
-    Función objetivo 2
+    Función objetivo 1
 
         Parameters:
             x1 (numeric): Valor en "x" a evaluar
@@ -329,10 +329,10 @@ def griewank(x1, x2):
     return z
 
 
-# Función objetivo 3
+# Función objetivo 2
 def rastrigin(x1, x2):
     """
-    Función objetivo 3
+    Función objetivo 2
 
         Parameters:
             x1 (numeric): Valor en "x" a evaluar
@@ -351,4 +351,4 @@ def rastrigin(x1, x2):
 
 pso = PSO(f=sphere, xl=np.array((-5, -5)), xu=np.array((5, 5)), swarm_size=50)
 x_best, y_best, f_best = pso.simulate(50, plot=True)
-print("Mínimo global encontrado en x={}, y={}, f(x)={}".format(x_best, y_best, f_best))
+print("\n\nMínimo global encontrado\nx={}, y={}, f(x)={}\n\n".format(x_best, y_best, f_best))
