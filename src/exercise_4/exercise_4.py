@@ -8,9 +8,9 @@
 #           Seminario de solución de problemas de inteligencia Artificial I
 #
 #
-#           Este programa calcula el mínimo global de una función con las estrategias evolutivas:
+#           Este programa calcula el mínimo global de una función con la estrategia evolutivas:
 #           - (μ + λ)-ES
-#           - (μ, λ)-ES
+#       
 #
 #
 ##############################################################################################################
@@ -23,7 +23,7 @@ from scipy.io import loadmat
 
 
 
-# Clase principal encargada de realizar las estrategias evolutivas
+# Clase principal encargada de realizar la estrategia evolutiva
 # Para una comprensión más clara del algoritmo y de las variables
 # buscar Estrategias evolutivas
 class ES:
@@ -212,16 +212,6 @@ def g(w):
 
 # Función objetivo 1
 def f(w):
-    """
-    Evalúa la función objetivo en "x" y "y"
-
-        Parameters:
-            x (Numeric): Valor en "x" a evaluar
-            y (Numeric): Valor en "y" a evaluar
-
-        Returns:
-            z (Numeric): Valor de la función evaluada en (x,y)
-    """
 
     z = (0.5 / n) * sum((Y - g(w)) ** 2)
 
