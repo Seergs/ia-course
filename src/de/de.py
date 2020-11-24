@@ -314,22 +314,6 @@ class DE:
         plt.pause(0.005)
 
 
-# Función objetivo 3
-def sphere(x1, x2):
-    """
-    Función objetivo 3
-
-        Parameters:
-            x1 (numeric): Valor en "x" a evaluar
-            x2 (numeric): Valor en "y" a evaluar
-
-        Returns:
-            z (numeric): Valor en "z" al evaluar la función
-    """
-    z = x1 ** 2 + x2 ** 2
-
-    return z
-
 
 # Función objetivo 1
 def griewank(x1, x2):
@@ -371,6 +355,24 @@ def rastrigin(x1, x2):
     return z
 
 
+# Función objetivo 3
+def sphere(x1, x2):
+    """
+    Función objetivo 3
+
+        Parameters:
+            x1 (numeric): Valor en "x" a evaluar
+            x2 (numeric): Valor en "y" a evaluar
+
+        Returns:
+            z (numeric): Valor en "z" al evaluar la función
+    """
+    z = x1 ** 2 + x2 ** 2
+
+    return z
+
+
+
 xl = np.array((-5, -5))
 xu = np.array((5, 5))
 
@@ -378,6 +380,6 @@ de = DE(f=sphere, population_size=50, xl=xl, xu=xu)
 x, f_best = de.start(200)
 x1, x2 = x
 print("\n\nMínimo global encontrado en:")
-print("{}".format(x1))
-print("{}".format(x2))
-print("{}".format(f_best))
+print("x={}".format(x1))
+print("y={}".format(x2))
+print("f(x)={}\n\n".format(f_best))
