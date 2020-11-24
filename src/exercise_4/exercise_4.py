@@ -10,7 +10,7 @@
 #
 #           Este programa calcula el mínimo global de una función con la estrategia evolutivas:
 #           - (μ + λ)-ES
-#       
+#
 #
 #
 ##############################################################################################################
@@ -20,7 +20,6 @@ import numpy as np
 import random
 import matplotlib.pyplot as plt
 from scipy.io import loadmat
-
 
 
 # Clase principal encargada de realizar la estrategia evolutiva
