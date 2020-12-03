@@ -2,7 +2,7 @@
 #                                                                                          #
 #                                                                                          #
 #                  Optimización por colonia de abejas artificial                           #
-#                  Sergio Suárez Álvarez                                                   #                   
+#                  Sergio Suárez Álvarez                                                   #
 #                  Código 21775849                                                         #
 #                  Seminario de solución de problemas de Inteligencia Artificial           #
 #                                                                                          #
@@ -56,7 +56,7 @@ class ABC:
     Z: array
         Lista de una dimensión que representa coordenadas de una matriz, para graficar el vector "z"
 
-    
+
     Methods
     -------
     start(generations, plot):
@@ -120,7 +120,6 @@ class ABC:
         self._aptitude = np.zeros(self._Pf)
         self._fitness = np.zeros(self._Pf)
 
-
         # Las siguientes líneas nos ayudan para graficar
         x_range = np.arange(self._xl[0], self._xu[0], 0.1)
         y_range = np.arange(self._xl[1], self._xu[1], 0.1)
@@ -130,7 +129,7 @@ class ABC:
 
         # Calculamos nuestro vector "z" evaluando en la función objetivo "x" y "y"
         self._Z = self._f(self._X, self._Y)
-    
+
     # Método que realiza la optimización por colonia de abejas
     def start(self, generations, plot=True):
         """
@@ -155,13 +154,15 @@ class ABC:
             self._explorers_phase()
             if plot:
                 self._plot(i)
-        
+
         if plot:
             plt.show()
-        
+
         # Se obtiene el mejor
         best_index = self._get_best_index_by_fitness()
-        return self._x[:,best_index], self._f(self._x[0,best_index], self._x[1, best_index])
+        return self._x[:, best_index], self._f(
+            self._x[0, best_index], self._x[1, best_index]
+        )
 
     # Método que inicializa a la población
     def _initialize(self):
@@ -181,7 +182,7 @@ class ABC:
                 (self._dimension)
             )
             self._fitness[i] = self._f(self._x[0, i], self._x[1, i])
-    
+
     # Etapa de abejas empleadas
     def _workers_phase(self):
         """
@@ -189,7 +190,7 @@ class ABC:
 
             Parameters:
                 None
-            
+
             Returns:
                 None
         """
@@ -198,21 +199,20 @@ class ABC:
             k = i
             while k == i:
                 k = self._get_random_index_from_population()
-            
-            j = np.random.randint(0, self._dimension)
-            phi = 2*np.random.random()-1
 
-            v = np.copy(self._x[:,i])
+            j = np.random.randint(0, self._dimension)
+            phi = 2 * np.random.random() - 1
+
+            v = np.copy(self._x[:, i])
 
             # Calculando una nueva solución
-            v[j] = self._x[j,i]+phi*(self._x[j,i]-self._x[j,k])
+            v[j] = self._x[j, i] + phi * (self._x[j, i] - self._x[j, k])
 
             fv = self._f(v[0], v[1])
 
-
             # Mejorando las soluciones
             if fv < self._fitness[i]:
-                self._x[:,i] = v
+                self._x[:, i] = v
                 self._fitness[i] = fv
 
                 # Si se encontró una mejor solución, se resetea el número de intentos
@@ -246,22 +246,22 @@ class ABC:
             k = m
             while k == m:
                 k = self._get_random_index_from_population()
-            
-            j = np.random.randint(0, self._dimension)
-            phi = 2*np.random.random() - 1
 
-            v = np.copy(self._x[:,m])
-            v[j] = self._x[j,m]+phi*(self._x[j,m]-self._x[j,k])
+            j = np.random.randint(0, self._dimension)
+            phi = 2 * np.random.random() - 1
+
+            v = np.copy(self._x[:, m])
+            v[j] = self._x[j, m] + phi * (self._x[j, m] - self._x[j, k])
 
             fv = self._f(v[0], v[1])
 
             # Mejorando
             if fv < self._fitness[m]:
-                self._x[:,m] = v
+                self._x[:, m] = v
                 self._fitness[m] = fv
                 self._l[m] = 0
             else:
-                self._l[m]  =self._l[m]+1
+                self._l[m] = self._l[m] + 1
 
     # Etapa de abejas exploradoras
     def _explorers_phase(self):
@@ -270,7 +270,7 @@ class ABC:
 
             Parameters:
                 None
-            Returns: 
+            Returns:
                 None
         """
 
@@ -284,7 +284,7 @@ class ABC:
                 )
                 self._fitness[i] = self._f(self._x[0, i], self._x[1, i])
                 self._l[i] = 0
-    
+
     # Método que selecciona un índice aleatorio de la población
     def _get_random_index_from_population(self):
         """
@@ -353,8 +353,8 @@ class ABC:
             else:
                 self._aptitude[i] = 1 + abs(fx)
 
-      # Método que obtiene el índice del individuo con mejor aptitud
-    
+    # Método que obtiene el índice del individuo con mejor aptitud
+
     # Método que obtiene el índice del individuo con mejor aptitud
     def _get_best_index_by_fitness(self):
         """
@@ -377,7 +377,7 @@ class ABC:
 
             Parameters:
                 title (string): Título de la gráfica
-            
+
             Returns:
                 None
         """
@@ -393,7 +393,7 @@ class ABC:
 
             Parameters:
                 title (string): Título de la gráfica
-            
+
             Returns:
                 None
         """
@@ -436,6 +436,7 @@ class ABC:
         plt.legend(loc="upper left")
         plt.grid()
         plt.pause(0.005)
+
 
 # Función objetivo 1
 def griewank(x1, x2):
@@ -494,12 +495,11 @@ def sphere(x1, x2):
     return z
 
 
-
 xl = np.array((-5, -5))
 xu = np.array((5, 5))
 
 abc = ABC(f=sphere, xl=xl, xu=xu, dimension=2, population_size=50)
-#abc.plot_surface("Sphere")
+# abc.plot_surface("Sphere")
 x, f_best = abc.start(200)
 x1, x2 = x
 print("\n\nMínimo global encontrado en:")

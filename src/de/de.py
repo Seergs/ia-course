@@ -314,7 +314,6 @@ class DE:
         plt.pause(0.005)
 
 
-
 # Función objetivo 1
 def griewank(x1, x2):
     """
@@ -370,7 +369,6 @@ def sphere(x1, x2):
     z = x1 ** 2 + x2 ** 2
 
     return z
-
 
 
 xl = np.array((-5, -5))
