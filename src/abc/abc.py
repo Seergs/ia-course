@@ -498,8 +498,7 @@ def sphere(x1, x2):
 xl = np.array((-5, -5))
 xu = np.array((5, 5))
 
-abc = ABC(f=sphere, xl=xl, xu=xu, dimension=2, population_size=50)
-# abc.plot_surface("Sphere")
+abc = ABC(f=griewank, xl=xl, xu=xu, dimension=2, population_size=50)
 x, f_best = abc.start(200)
 x1, x2 = x
 print("\n\nMínimo global encontrado en:")
